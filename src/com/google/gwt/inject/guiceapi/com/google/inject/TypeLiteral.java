@@ -15,6 +15,8 @@
  */
 package com.google.inject;
 
+import java.lang.reflect.Type;
+
 /**
  * Fake equivalent to Guice's TypeLiteral.
  * This hackery is required due to the dual nature of {@code GinModule}
@@ -26,5 +28,13 @@ public class TypeLiteral<T> {
 
   public static <T> TypeLiteral<T> get(Class<T> type) {
     throw new UnsupportedOperationException("Should never be called in client code.");
+  }
+  
+  public static <T> TypeLiteral<T> get(Type type) {
+	throw new UnsupportedOperationException("Should never be called in client code.");
+  }
+	    
+  public final Type getType() {
+	throw new UnsupportedOperationException("Should never be called in client code.");
   }
 }
