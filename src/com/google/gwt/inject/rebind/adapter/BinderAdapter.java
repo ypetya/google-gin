@@ -15,6 +15,9 @@
  */
 package com.google.gwt.inject.rebind.adapter;
 
+import java.lang.reflect.ParameterizedType;
+
+import com.google.gwt.inject.client.ConstantProvider;
 import com.google.gwt.inject.client.GinModule;
 import com.google.gwt.inject.client.PrivateGinModule;
 import com.google.gwt.inject.client.assistedinject.FactoryModule;
@@ -26,7 +29,12 @@ import com.google.gwt.inject.rebind.GinjectorBindings;
 import com.google.inject.Binder;
 import com.google.inject.Key;
 import com.google.inject.Module;
+
 import com.google.inject.TypeLiteral;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import com.google.inject.util.Types;
+import com.xtesseract.core.server.bcp.OperationHandler;
+import com.xtesseract.core.server.bcp.OperationHandlerFactory;
 
 class BinderAdapter implements GinBinder {
   private final Binder binder;
@@ -47,6 +55,19 @@ class BinderAdapter implements GinBinder {
 
   public <T> GinLinkedBindingBuilder<T> bind(Key<T> key) {
     return new LinkedBindingBuilderAdapter<T>(binder.bind(key));
+  }
+
+  @Override
+  public <T, V> void bindInstance(Key<ConstantProvider<T, V>> key, Class<V> valueType, final V value) {
+    ParameterizedType factoryType = Types.newParameterizedType(ConstantProvider.class, valueType);
+    TypeLiteral<?> factoryTypeLiteral = TypeLiteral.get(factoryType);
+    install(new FactoryModuleBuilder().implement(OperationHandler.class, clazz).build(factoryTypeLiteral));
+
+    binder.bind(key).toInstance(new ConstantProvider<T, V>() {
+          public V get() {
+            return value;
+          }
+    });
   }
 
   public GinAnnotatedConstantBindingBuilder bindConstant() {

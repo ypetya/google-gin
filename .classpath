@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/javax.inject.jar"/>
 	<classpathentry kind="lib" path="/home/snv/.m2/repository/com/google/gwt/gwt-dev/2.5.0/gwt-dev-2.5.0.jar"/>
 	<classpathentry kind="lib" path="/home/snv/.m2/repository/com/google/gwt/gwt-user/2.5.0/gwt-user-2.5.0.jar"/>
+	<classpathentry kind="lib" path="/home/snv/.m2/repository/junit/junit/4.11/junit-4.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
