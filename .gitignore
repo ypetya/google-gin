@@ -4,3 +4,8 @@
 *.jar
 *.war
 *.ear
+
+bin/
+gwt-unitCache/
+war/
+
