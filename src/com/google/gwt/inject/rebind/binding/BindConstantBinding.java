@@ -17,6 +17,7 @@ package com.google.gwt.inject.rebind.binding;
 
 import com.google.gwt.core.ext.Generator;
 import com.google.gwt.dev.util.Preconditions;
+import com.google.gwt.inject.client.ConstantProvider;
 import com.google.gwt.inject.rebind.GinjectorBindings;
 import com.google.gwt.inject.rebind.reflect.NoSourceNameException;
 import com.google.gwt.inject.rebind.reflect.ReflectUtil;
@@ -26,6 +27,7 @@ import com.google.gwt.inject.rebind.util.SourceSnippet;
 import com.google.gwt.inject.rebind.util.SourceSnippetBuilder;
 import com.google.gwt.inject.rebind.util.SourceSnippets;
 import com.google.inject.Key;
+import com.google.inject.internal.MoreTypes.ParameterizedTypeImpl;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -50,14 +52,17 @@ public class BindConstantBinding<T> extends AbstractBinding implements Binding {
   public static boolean isConstantKey(Key<?> key) {
     Type type = key.getTypeLiteral().getType();
 
-    if (!(type instanceof Class)) {
-      return false;
+    if (type instanceof Class) {
+      Class clazz = (Class) type;
+      return clazz == String.class || clazz == Class.class || clazz.isPrimitive()
+          || Number.class.isAssignableFrom(clazz) || Character.class.isAssignableFrom(clazz)
+          || Boolean.class.isAssignableFrom(clazz) || clazz.isEnum();
     }
-
-    Class clazz = (Class) type;
-    return clazz == String.class || clazz == Class.class || clazz.isPrimitive()
-        || Number.class.isAssignableFrom(clazz) || Character.class.isAssignableFrom(clazz)
-        || Boolean.class.isAssignableFrom(clazz) || clazz.isEnum();
+    if (type instanceof ParameterizedTypeImpl) {
+      ParameterizedTypeImpl impl = (ParameterizedTypeImpl)type;
+      return ConstantProvider.class.equals(impl.getRawType());
+    }
+    return false;
   }
 
   BindConstantBinding(Key<T> key, T instance, Context context) {
@@ -69,7 +74,32 @@ public class BindConstantBinding<T> extends AbstractBinding implements Binding {
 
   private static <T> String getValueToOutput(Key<T> key, T instance) {
     Type type = key.getTypeLiteral().getType();
+    
+    if (type instanceof ParameterizedTypeImpl) {
+      Type instanceType = ((ParameterizedTypeImpl)type).getActualTypeArguments()[1];
+      instance= ((ConstantProvider<?, T>)instance).get();
+      
+      try{
+      String providerTypeName = ReflectUtil.getSourceName(type);
+      String targetKeyName = ReflectUtil.getSourceName(instanceType);
+      
+      return new StringBuilder()
+        .append(" new ")
+        .append(providerTypeName).append("() { \n")
+        .append("  public ").append(targetKeyName).append(" get() { \n")
+        .append("    return ").append(normalizeValue(instanceType, instance)).append(";\n")
+        .append("  }\n")
+        .append("}")
+        .toString();
+      } catch(Exception e) {
+        throw new RuntimeException(e);
+      }
+      }
 
+    return normalizeValue(type, instance);
+  }
+
+  private static <T> String normalizeValue(Type type, T instance) {
     if (type == String.class) {
       return "\"" + Generator.escape(instance.toString()) + "\"";
     } else if (type == Class.class) {
