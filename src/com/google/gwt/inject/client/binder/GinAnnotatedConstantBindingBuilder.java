@@ -17,10 +17,15 @@ package com.google.gwt.inject.client.binder;
 
 import java.lang.annotation.Annotation;
 
+import com.google.inject.TypeLiteral;
+
 public interface GinAnnotatedConstantBindingBuilder {
 
   GinConstantBindingBuilder annotatedWith(Class<? extends Annotation> aClass);
 
   GinConstantBindingBuilder annotatedWith(Annotation annotation);
+  
+  GinConstantBindingBuilder parameterizedWith(TypeLiteral<?> parameter);
 
+  GinConstantBindingBuilder parameterizedWith(Class<?> parameter);
 }

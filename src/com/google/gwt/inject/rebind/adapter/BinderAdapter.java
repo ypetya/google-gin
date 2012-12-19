@@ -15,7 +15,6 @@
  */
 package com.google.gwt.inject.rebind.adapter;
 
-import com.google.gwt.inject.client.ConstantProvider;
 import com.google.gwt.inject.client.GinModule;
 import com.google.gwt.inject.client.PrivateGinModule;
 import com.google.gwt.inject.client.assistedinject.FactoryModule;
@@ -50,17 +49,8 @@ class BinderAdapter implements GinBinder {
     return new LinkedBindingBuilderAdapter<T>(binder.bind(key));
   }
 
-  @Override
-  public <T, V> void bindInstance(Key<ConstantProvider<T, V>> key, Class<V> valueType, final V value) {
-    binder.bind(key).toInstance(new ConstantProvider<T, V>() {
-          public V get() {
-            return value;
-          }
-    });
-  }
-
   public GinAnnotatedConstantBindingBuilder bindConstant() {
-    return new AnnotatedConstantBindingBuilderAdapter(binder.bindConstant());
+    return new AnnotatedConstantBindingBuilderAdapter(binder);
   }
 
   public void install(GinModule install) {

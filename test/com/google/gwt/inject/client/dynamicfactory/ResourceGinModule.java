@@ -6,7 +6,6 @@ import javax.inject.Inject;
 
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.gwt.inject.client.ConstantProvider;
-import com.google.gwt.inject.client.dynamicfactory.ResourceGinModule.Registrator;
 import com.google.inject.TypeLiteral;
 import com.google.inject.util.Types;
 
@@ -29,9 +28,9 @@ public class ResourceGinModule extends AbstractGinModule {
   @Override
   protected void configure() {
     bind(resource);
-    bindInstanceToParameter(TypeLiteral.get(resource), code);
+    bindConstant().parameterizedWith(TypeLiteral.get(resource)).to(code);
 
-    Type registratorType = Types.newParameterizedTypeWithOwner(ResourceGinModule.Registrator.class, ResourceGinModule.Registrator.class, TypeLiteral.get(resource).getType());
+    Type registratorType = Types.newParameterizedTypeWithOwner(Registrator.class, Registrator.class, TypeLiteral.get(resource).getType());
     bind(TypeLiteral.get(registratorType)).asEagerSingleton();
   }
 }

@@ -15,7 +15,6 @@
  */
 package com.google.gwt.inject.client.binder;
 
-import com.google.gwt.inject.client.ConstantProvider;
 import com.google.gwt.inject.client.GinModule;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
@@ -30,8 +29,6 @@ public interface GinBinder {
 
   GinAnnotatedConstantBindingBuilder bindConstant();
   
-  <T, V> void bindInstance(Key<ConstantProvider<T, V>> key, Class<V> valueType, V value);
-
   void install(GinModule install); // not using proper generics for compat with Guice 1.0
 
   void requestStaticInjection(Class<?>... types);

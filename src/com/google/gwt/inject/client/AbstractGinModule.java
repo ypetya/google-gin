@@ -15,15 +15,12 @@
  */
 package com.google.gwt.inject.client;
 
-import java.lang.reflect.Type;
-
 import com.google.gwt.inject.client.binder.GinAnnotatedBindingBuilder;
 import com.google.gwt.inject.client.binder.GinAnnotatedConstantBindingBuilder;
 import com.google.gwt.inject.client.binder.GinBinder;
 import com.google.gwt.inject.client.binder.GinLinkedBindingBuilder;
 import com.google.inject.Key;
 import com.google.inject.TypeLiteral;
-import com.google.inject.util.Types;
 
 /**
  * GIN counterpart of Guice's {@code AbstractModule}.
@@ -48,20 +45,6 @@ public abstract class AbstractGinModule implements GinModule {
 
   protected final <T> GinLinkedBindingBuilder<T> bind(Key<T> key) {
     return binder.bind(key);
-  }
-
-  @SuppressWarnings("unchecked")
-  protected final <T> void bindInstanceToParameter(TypeLiteral<T> key, String value) {
-    Type providerType = Types.newParameterizedType(ConstantProvider.class, key.getType(), TypeLiteral.get(String.class).getType());
-    binder.bindInstance((Key)Key.get(providerType), String.class, value);
-  }
-  
-  protected final <T> void bindInstance(TypeLiteral<ConstantProvider<T, String>> key, String value) {
-    binder.bindInstance(Key.get(key), String.class, value);
-  }
-  
-  protected final <T> void bindInstance(Key<ConstantProvider<T, String>> key, String value) {
-    binder.bindInstance(key, String.class, value);
   }
 
   protected final GinAnnotatedConstantBindingBuilder bindConstant() {
