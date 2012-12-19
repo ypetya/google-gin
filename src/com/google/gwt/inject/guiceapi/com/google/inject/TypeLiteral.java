@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
  * @see com.google.gwt.inject.client.GinModule
  */
 public class TypeLiteral<T> {
-
+  
   public static <T> TypeLiteral<T> get(Class<T> type) {
     throw new UnsupportedOperationException("Should never be called in client code.");
   }

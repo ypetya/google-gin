@@ -50,7 +50,7 @@ class BinderAdapter implements GinBinder {
   }
 
   public GinAnnotatedConstantBindingBuilder bindConstant() {
-    return new AnnotatedConstantBindingBuilderAdapter(binder.bindConstant());
+    return new AnnotatedConstantBindingBuilderAdapter(binder);
   }
 
   public void install(GinModule install) {

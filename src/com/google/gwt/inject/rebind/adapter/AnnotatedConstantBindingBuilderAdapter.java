@@ -15,25 +15,36 @@
  */
 package com.google.gwt.inject.rebind.adapter;
 
-import com.google.gwt.inject.client.binder.GinAnnotatedConstantBindingBuilder;
-import com.google.gwt.inject.client.binder.GinConstantBindingBuilder;
-import com.google.inject.binder.AnnotatedConstantBindingBuilder;
-
 import java.lang.annotation.Annotation;
 
+import com.google.gwt.inject.client.binder.GinAnnotatedConstantBindingBuilder;
+import com.google.gwt.inject.client.binder.GinConstantBindingBuilder;
+import com.google.inject.Binder;
+import com.google.inject.TypeLiteral;
+
 class AnnotatedConstantBindingBuilderAdapter implements GinAnnotatedConstantBindingBuilder {
-  private final AnnotatedConstantBindingBuilder guiceBuilder;
+  private final Binder binder;
 
   public AnnotatedConstantBindingBuilderAdapter(
-      AnnotatedConstantBindingBuilder guiceBuilder) {
-    this.guiceBuilder = guiceBuilder;
+      Binder binder) {
+    this.binder = binder;
   }
 
   public GinConstantBindingBuilder annotatedWith(Class<? extends Annotation> aClass) {
-    return new ConstantBindingBuilderAdapter(guiceBuilder.annotatedWith(aClass));
+    return new ConstantBindingBuilderAdapter(binder.bindConstant().annotatedWith(aClass));
   }
 
   public GinConstantBindingBuilder annotatedWith(Annotation annotation) {
-    return new ConstantBindingBuilderAdapter(guiceBuilder.annotatedWith(annotation));
+    return new ConstantBindingBuilderAdapter(binder.bindConstant().annotatedWith(annotation));
+  }
+
+  @Override
+  public GinConstantBindingBuilder parameterizedWith(TypeLiteral<?> parameter) {
+    return new ParameterizedConstantBindingBuilderAdapter(binder, parameter);
+  }
+
+  @Override
+  public GinConstantBindingBuilder parameterizedWith(Class<?> parameter) {
+    return new ParameterizedConstantBindingBuilderAdapter(binder, TypeLiteral.get(parameter));
   }
 }

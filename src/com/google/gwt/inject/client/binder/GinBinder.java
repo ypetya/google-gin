@@ -28,7 +28,7 @@ public interface GinBinder {
   <T> GinLinkedBindingBuilder<T> bind(Key<T> key);
 
   GinAnnotatedConstantBindingBuilder bindConstant();
-
+  
   void install(GinModule install); // not using proper generics for compat with Guice 1.0
 
   void requestStaticInjection(Class<?>... types);
