@@ -29,7 +29,11 @@ public class TypeLiteral<T> {
   public static <T> TypeLiteral<T> get(Class<T> type) {
     throw new UnsupportedOperationException("Should never be called in client code.");
   }
-  
+
+  public static TypeLiteral<?> get(Object type) {
+    throw new UnsupportedOperationException("Should never be called in client code.");
+  }
+
   public static <T> TypeLiteral<T> get(Type type) {
 	throw new UnsupportedOperationException("Should never be called in client code.");
   }

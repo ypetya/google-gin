@@ -39,6 +39,8 @@ import com.google.gwt.inject.client.installduplicate.InstallDuplicateTest;
 import com.google.gwt.inject.client.jsr330.Jsr330Test;
 import com.google.gwt.inject.client.method.MethodInjectTest;
 import com.google.gwt.inject.client.misc.StaticInjectTest;
+import com.google.gwt.inject.client.multibindings.MapBinderTest;
+import com.google.gwt.inject.client.multibindings.MultibinderTest;
 import com.google.gwt.inject.client.nomodules.NoModulesTest;
 import com.google.gwt.inject.client.nonpublic.NonPublicTest;
 import com.google.gwt.inject.client.optional.OptionalInjectionTest;
@@ -112,6 +114,8 @@ public class GinClientTestSuite {
     // suite.addTestSuite(PrivateDoubleBindsTest.class);
     suite.addTestSuite(GeneratorTest.class);
     suite.addTestSuite(SuperSourceTest.class);
+    suite.addTestSuite(MultibinderTest.class);
+    suite.addTestSuite(MapBinderTest.class);
 
     return suite;
   }
